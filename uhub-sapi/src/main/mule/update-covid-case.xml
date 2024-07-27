@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="update-covid-caseFlow" doc:id="55a6acf7-637b-42ac-af0c-d56e135dbcff" >
+		<http:listener doc:name="Listener" doc:id="a80418e8-b1b4-42ac-80aa-4718c3b059b4" config-ref="HTTP_Listener_config" path="v1/cases/update" allowedMethods="PUT"/>
+		<logger level="INFO" doc:name="Logger" doc:id="15ba3a2b-34f6-4ebd-a08e-e795004e8628" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="5e4391ce-733b-48b8-9af0-d8679c7288bd">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	source: payload.covidCase.source,
+	caseID: payload.covidCase.caseID as String,
+	caseType: payload.covidCase.caseType,
+	firstName: payload.covidCase.firstName,
+	FullName: payload.covidCase.firstName ++ " " ++ payload.covidCase.lastName,
+	lastName: payload.covidCase.lastName,
+	phone: payload.covidCase.phone,
+	email: payload.covidCase.email,
+	dateOfBirth: payload.covidCase.dateOfBirth as String,
+	nationalID: payload.covidCase.nationalID,
+	nationalIDType: payload.covidCase.nationalIDType,
+	address: {
+		streetAddress: payload.covidCase.address.streetAddress,
+		city: payload.covidCase.address.city,
+		state: payload.covidCase.address.state,
+		postal: payload.covidCase.address.postal as String,
+		country: payload.covidCase.address.country
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="767680e4-6ec9-4c4a-9628-9c81fcd40a13" message="#[payload]"/>
+	</flow>
+</mule>

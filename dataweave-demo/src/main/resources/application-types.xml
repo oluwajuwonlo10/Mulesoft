@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="EmployeeMetaDataJSON" format="json">
+      <types:shape format="weave" example="examples/employee.json"><![CDATA[%dw 2.0
+
+type EmployeeMetaDataJSON = {|
+  empID: Number {"typeId": "int"}, 
+  empName: String, 
+  empEmail: String, 
+  empStatus: String
+|} {"example": "{\\\"empID\\\":78788,\\\"empName\\\":\\\"Chinna\\\",\\\"empEmail\\\":\\\"chinna.mulesoft@gmail.com\\\",\\\"empStatus\\\":\\\"A\\\"}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="BookMetaDataXML" format="xml">
+      <types:example format="xml" element="book" location="examples/book.xml"/>
+    </types:type>
+    <types:type name="BookMetaDataJSON" format="json">
+      <types:shape format="weave" example="examples/book.json"><![CDATA[%dw 2.0
+
+type BookMetaDataJSON = {|
+  item: {|
+    "type": String, 
+    price: Number {"typeId": "int"}, 
+    properties: {|
+      title: String, 
+      author: Array<String>, 
+      year: Number {"typeId": "int"}, 
+      lungage: String
+    |}
+  |}
+|} {"example": "{\\\"item\\\":{\\\"type\\\":\\\"book\\\",\\\"price\\\":30,\\\"properties\\\":{\\\"title\\\":\\\"Everyday Italian\\\",\\\"author\\\":[\\\"Giada De Laurentiis\\\"],\\\"year\\\":2005,\\\"lungage\\\":\\\"en\\\"}}}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="EmployeeMetaData-CSV" format="csv">
+      <types:shape format="weave" example="examples/employee.csv"><![CDATA[%dw 2.0
+
+type EmployeeMetaData_CSV = Array<{|  empID: String,   empName: String,   empEmail: String,   empStatus: String|}> {"header": "true",
+"headerLineNumber": "0",
+"isQuotedString": "false"}
+
+]]></types:shape>
+      <types:properties>
+        <types:property name="headerLineNumber" value="0"/>
+        <types:property name="header" value="true"/>
+        <types:property name="isQuotedString" value="false"/>
+      </types:properties>
+    </types:type>
+    <types:type name="EmployeeMetadata-XLSX" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: string]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#a8259bac-f487-4bd8-a918-18bf63ddf28b">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="EmployeeMetaDataJSON"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="EmployeeMetaDataJSON"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#79583de8-e270-4f26-a67c-2008fd881704">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="BookMetaDataXML"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="BookMetaDataJSON"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#7f701bba-9d9b-4512-a38c-61defc3cc9f0">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="BookMetaDataJSON"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="BookMetaDataXML"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#d29501c3-7af9-434f-a300-0f8035a74c6f">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="EmployeeMetaDataJSON"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="EmployeeMetaData-CSV"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

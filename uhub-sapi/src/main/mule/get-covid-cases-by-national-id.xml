@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<flow name="get-covid-cases-by-national-idFlow" doc:id="44df1bc5-6c8b-44f3-b274-32e8b898a6e5" >
+		<http:listener doc:name="Listener" doc:id="6e16b2fd-c8c6-4cd2-b1d3-ce8647dc3bc8" config-ref="HTTP_Listener_config" path="v1/cases/{nationalID}" allowedMethods="GET">
+			<http:response statusCode="#[vars.statusCode]" reasonPhrase='#[vars.httpReason]' >
+			</http:response>
+		</http:listener>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="28e7d5e2-31ed-4d55-9c6e-d36a247c6ba8" variableName="covidPayload"/>
+		<logger level="INFO" doc:name="Logger" doc:id="78d1e814-6412-4496-a3ae-ae43e1e5a938" message="#[attributes]"/>
+		<set-variable value="#[output text/plain --- vars.covidPayload.covidCase.lastName]" doc:name="Set Variable" doc:id="41c40db3-2f5b-4dfd-94ee-7c51e32e26df" variableName="userName" />
+		<logger level="INFO" doc:name="Logger" doc:id="71905294-3e57-4fb3-9b96-ac2c52d1c931" message="#[vars.userName]"/>
+		<set-payload value='#["success-response"]' doc:name="Set Payload" doc:id="e9c1df87-2a96-4ddb-9308-b75d5361bd40" />
+		<set-variable value="200" doc:name="Set Variable" doc:id="1cffe78a-5d3b-4df1-9b72-afdabe9e76bb" variableName="statusCode"/>
+		<set-variable value='#["OK"]' doc:name="Set Variable" doc:id="2fdca3be-6838-4aae-bdf9-32ceec077196" variableName="httpReason"/>
+	</flow>
+</mule>

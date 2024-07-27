@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="Second-hello-Mule-Flow" doc:id="aa325884-883b-4924-ab04-f7e17ed8aa5b">
+		<http:listener doc:name="Listener" doc:id="b52489c9-dadd-49fb-b379-78cbefd23e9d" config-ref="HTTP_Listener_config" path="hi" allowedMethods="GET"/>
+		<logger level="INFO" doc:name="Logger" doc:id="be8807c2-d086-44c4-8fa6-1958dfcd5061" message="Second Http Connector and logger" />
+	</flow>
+	</mule>
